@@ -41,8 +41,15 @@ void num_to_decimal(char* num, int base) {
 
 void hex_to_decimal(char* num) {
     int dec_num = 0;
+    strrev(num);
     for (int i = 0; i < strlen(num); i++) {
-        dec_num = dec_num + (num[i] - 48) * ((int) pow((double) 16, (double) i));
+        if (num[i] >= 48 && num[i] <= 57) {
+            dec_num = dec_num + (num[i] - 48) * ((int) pow((double) 16, (double) i));
+        } else if (num[i] >= 65 && num[i] <= 70) {
+            dec_num = dec_num + (num[i] - 55) * ((int) pow((double) 16, (double) i));
+        } else {
+            printf("Error Processing Hexadecimal number");
+        }
     }
     char* new_num = malloc(8 * sizeof(int));
     sprintf(new_num, "%d", dec_num); 
@@ -54,7 +61,8 @@ void hex_to_decimal(char* num) {
 
 void decimal_to_binary(char* num) {
     int int_num = atoi(num);
-    for (int i = strlen(num); i > 0; i--) {
+    strrev(num);
+    for (int i = 30; i >= 0; i--) {
         if (((int) pow((double) 2, (double) i)) <= int_num) {
             num[i] = 49;
             int_num = int_num - ((int) pow((double) 2, (double) i));
@@ -62,6 +70,7 @@ void decimal_to_binary(char* num) {
             num[i] = 48;
         }
     }
+    strrev(num);
     int index = 0;
     for (int i = 0; i < strlen(num); i++) {
         if (i < strlen(num) - 1) {
@@ -78,7 +87,7 @@ void decimal_to_binary(char* num) {
     for (int i = 0; i < strlen(num); i++) {
         num[i] = 0;
     }
-    strcpy(temp_str, num);
+    strcpy(num, temp_str);
     free(temp_str);
 }
 
@@ -90,6 +99,9 @@ void binary_to_octal(char* num) {
     }
     strcpy(temp_str, "000");
     strrev(num);
+    for (int i = strlen(num); i < 31; i++) {
+        num[i] = 0;
+    }
     int offset = strlen(num) % 3;
     int index = (strlen(num) - offset) / 3;
     for (int i = 0; i <= index; i++) {
@@ -140,6 +152,11 @@ void binary_to_octal(char* num) {
     for (int i = 0; i < strlen(num); i++) {
         num[i] = 0;
     }
+    while (hold_str[0] == 48) {
+        for (int i = 0; i <= strlen(hold_str); i++) {
+            hold_str[i] = hold_str[i + 1];
+        }
+    }
     strcpy(num, hold_str);
     return;
 }
@@ -149,6 +166,9 @@ void binary_to_hexadecimal(char* num) {
     char* hold_str = malloc(8 * sizeof(int));
     strcpy(temp_str, "0000");
     strrev(num);
+    for (int i = strlen(num); i < 31; i++) {
+        num[i] = 0;
+    }
     int offset = strlen(num) % 4;
     int index = (strlen(num) - offset) / 4;
     for (int i = 0; i <= index; i++) {
@@ -162,28 +182,28 @@ void binary_to_hexadecimal(char* num) {
         strrev(temp_str);
         int temp_num = atoi(temp_str);
         switch (temp_num) {
-            case 0000:
+            case 0:
                 hold_str[i] = 48;
                 break;
-            case 0001:
+            case 1:
                 hold_str[i] = 49;
                 break;
-            case 0010:
+            case 10:
                 hold_str[i] = 50;
                 break;
-            case 0011:
+            case 11:
                 hold_str[i] = 51;
                 break;
-            case 0100:
+            case 100:
                 hold_str[i] = 52;
                 break;
-            case 0101:
+            case 101:
                 hold_str[i] = 53;
                 break;
-            case 0110:
+            case 110:
                 hold_str[i] = 54;
                 break;
-            case 0111:
+            case 111:
                 hold_str[i] = 55;
                 break;
             case 1000:
@@ -223,6 +243,11 @@ void binary_to_hexadecimal(char* num) {
     strrev(hold_str);
     for (int i = 0; i < strlen(num); i++) {
         num[i] = 0;
+    }
+    while (hold_str[0] == 48) {
+        for (int i = 0; i <= strlen(hold_str); i++) {
+            hold_str[i] = hold_str[i + 1];
+        }
     }
     strcpy(num, hold_str);
     free(hold_str);
@@ -376,7 +401,7 @@ int main() {
                 scanf("%s", num);
                 int good_num = 1;
                 for (int i = 0; i < strlen(num); i++) {
-                    if (!(num[i] >= 48 && num[i] <= 55) || !(num[i] >= 65 && num[i] <= 70)) {
+                    if (!((num[i] >= 48 && num[i] <= 55) || !(num[i] >= 65 && num[i] <= 70))) {
                         printf("This is not a Hexadecimal number. Please try again.\n");
                         good_num = 0;
                         break;
