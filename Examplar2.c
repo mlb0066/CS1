@@ -1,3 +1,5 @@
+//Author: Michael Barchett
+//Reviewer: Jacob Rechter
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
